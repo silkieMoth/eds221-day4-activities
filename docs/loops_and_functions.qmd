@@ -1,0 +1,113 @@
+---
+title: "loops_and_functions"
+author: "jpc"
+format: html
+execute:
+  warning: false
+  message: false
+---
+
+# task 1- sequences plus for loop output
+## define variables
+```{r}
+weekdays <- c("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
+transects <- c("transect_a", "transect_b", "transect_c")
+trans_vec <- vector(mode = "character", length = length(weekdays) * length(transects))
+h <- 1
+```
+
+## for loop with iterator
+```{r}
+  for (i in 1:length(weekdays)){
+    for (j in 1:length(transects)){
+      trans_vec[h] <- paste(weekdays[i], "-", transects[j])
+      h <- h + 1
+    }
+  }
+
+```
+
+## matrix
+```{r}
+wkday_trans_matrix <- matrix(data = trans_vec, nrow = 7, ncol = 3)
+```
+
+# task 2- force function
+## initialize function
+```{r}
+force <- function(mass, acceleration){
+  f <- mass * acceleration
+  return(paste("the resulting force is", f, "newtons"))
+}
+```
+
+## try function
+```{r}
+force(5, 10)
+```
+# task 3 - dumbass fish
+## table to dataframe
+```{r}
+fish_params <- data.frame(sci_name = c("Chanos chanos", "Sphyraena barracuda", "Caranx ignobilis"), common_name = c("Milkfish", "Great barracuda", "Giant trevally"), a_est = c(0.0905, 0.0181, 0.0353), b_est = c(2.52, 3.27, 3.05))
+```
+
+## make the fucktion
+```{r}
+
+fish_weight <- function(fish_name, tot_length){
+  if(fish_name != "Milkfish" & fish_name != "Great barracuda" & fish_name != "Giant trevally"){
+    warning("invalid entry for fish_name. Enter common names for either: Milkfish, Great barracuda, Giant trevally")
+  }
+  else if(is.numeric(tot_length == FALSE)){
+    warning("tot_length: pls enter a valid number in cm")
+  }
+  else
+    my_sub <- dplyr::filter(fish_params, common_name == fish_name)
+  return(my_sub$a_est * (tot_length ^ my_sub$b_est))
+}
+```
+
+## now we calculate over a range of lengths
+## so we make a vector of lengths with seq()
+```{r}
+len_seq <- seq(from = 0, to = 100, by = 1)
+milkfish_weights <- fish_weight("Milkfish", len_seq)
+```
+
+# task 4
+## something about the waves of the ocean
+```{r}
+wave_power <- function(wave_height, wave_period){
+  0.5 * (wave_height^2) * wave_period
+}
+```
+
+## lets have seqs
+```{r}
+height_seq <- seq(from = 0, to = 3, by = 0.2)
+wave_power_approx_8_sec <- wave_power(height_seq, 8)
+```
+
+# task 5
+## not so deep this time
+```{r}
+wave_energy <- function(water_depth, wave_height, wave_period){
+  if(water_depth <= 12){
+    message("the shallow equation was used")
+    return(0.81 * (wave_height^2) * wave_period)
+    
+  }
+  if(water_depth > 12){
+    message("the deep water equation was used")
+    return(0.5 * (wave_height^2) * wave_period)
+    
+  }
+}
+```
+
+## try to swim
+```{r}
+wave_energy(11, 67, 12)
+wave_energy(15, 5, 24)
+```
+
